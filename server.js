@@ -6,6 +6,7 @@ const app            = express();
 const morgan         = require('morgan');
 var mongoose         = require('mongoose');
 var cors             = require('cors');
+var path             = require('path');
 const port = 8000;
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -55,6 +56,9 @@ app.use(function(err, req, res, next) {
 
 
 app.use(require('./app/routes'));
+// app.use('/public', express.static('public'));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 
 mongoose.connect(db.url, (err) => {
     if (err) return console.log(err);

@@ -2,14 +2,20 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 // create a schema
-var articleSchema = new Schema({
-  title: {type: String, required: true},
-  content: {type: String, required: true},
+var aboutSchema = new Schema({
+  name: {type: String,},
+  title: {type: String,},
+  text: {type: String,},
   published: Boolean,
   image: Schema.Types.Mixed,
+  linkedin: String,
+  facebook: String,
+  github: String,
+  twitter: String,
+  // skills: [{type: mongoose.Schema.Types.ObjectId, ref: 'Skill'}]
 }, {timestamps: true});
 
-articleSchema.methods = {
+aboutSchema.methods = {
   update: function(data, file){
     let newFile = {};
     if(file){
@@ -22,7 +28,7 @@ articleSchema.methods = {
 
 // the schema is useless so far
 // we need to create a model using it
-var Article = mongoose.model('Article', articleSchema);
+var About = mongoose.model('About', aboutSchema);
 
 // make this available to our notes in our Node applications
-module.exports = Article;
+module.exports = About;
