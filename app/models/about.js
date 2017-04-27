@@ -3,16 +3,16 @@ var Schema = mongoose.Schema;
 
 // create a schema
 var aboutSchema = new Schema({
-  name: {type: String,},
-  title: {type: String,},
-  text: {type: String,},
+  name: {type: String},
+  title: {type: String},
+  text: {type: String},
   published: Boolean,
   image: Schema.Types.Mixed,
   linkedin: String,
   facebook: String,
   github: String,
   twitter: String,
-  // skills: [{type: mongoose.Schema.Types.ObjectId, ref: 'Skill'}]
+  skills: [{type: mongoose.Schema.Types.ObjectId, ref: 'Skill'}]
 }, {timestamps: true});
 
 aboutSchema.methods = {

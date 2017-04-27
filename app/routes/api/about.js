@@ -1,4 +1,5 @@
 var About = require('../../models/about');
+var Skill = require('../../models/skill');
 var auth = require('./../auth');
 var upload = require('../../../config/uploadStorage');
 var router = require('express').Router();
@@ -30,12 +31,12 @@ router.get('/', auth.optional, (req, res)=>{
 // TODO: delete should not be here
 router.delete('/:id', (req, res)=>{
   const id = req.params.id;
-  About.findById(id, function(err, article){
+  About.findById(id, function(err, about){
     if(err){
       res.send({'error': 'An error occured'});
     }
 
-    return req.article.remove().then(function(){
+    return about.remove().then(function(){
       return res.sendStatus(204);
     });
   });
@@ -68,11 +69,43 @@ router.put('/', upload.single('image'), (req, res) => {
           res.send({error: {file: `File is too large, it has ${(file.size / 1048576).toFixed(2)} MB! Make sure that file is smaller than 1 MB.`}});
         } else {
           about.update(req.body, file);
+          about.save();
           res.send(about);
         }
       }
     }
   });
+});
+
+router.get('/skills', auth.optional, (req, res)=>{
+  Skill.find(req.query, (err, skills) => {
+    if(err){
+      res.send({'error': 'An error occured'});
+    }
+
+    res.send(skills);
+  });
+});
+
+
+router.post('/skills', auth.optional, function(req, res){
+  let newSkill = new Skill(req.body);
+
+  About.findOne({}).populate('about').exec(function(err, about){
+    newSkill.about = about;
+    newSkill.save();
+    about.skills.push(newSkill);
+    about.save(function(err){
+      if(err){
+        console.log(err);
+        res.send({error: 'an error occured.'});
+      } else {
+        res.send(newSkill);
+      }
+    });
+
+  });
+
 });
 
 module.exports = router;
