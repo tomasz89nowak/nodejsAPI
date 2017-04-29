@@ -92,7 +92,7 @@ router.post('/skills', auth.optional, function(req, res){
   let newSkill = new Skill(req.body);
 
   About.findOne({}).populate('about').exec(function(err, about){
-    newSkill.about = about;
+    newSkill.about = about._id;
     newSkill.save();
     about.skills.push(newSkill);
     about.save(function(err){
@@ -106,6 +106,22 @@ router.post('/skills', auth.optional, function(req, res){
 
   });
 
+});
+
+router.delete('/skills/:id', (req, res)=>{
+  const id = req.params.id;
+  Skill.findById(id, function(err, skill){
+    if(err){
+      res.send({'error': 'An error occured'});
+    }
+    if(skill){
+      return skill.remove().then(function(){
+        return res.send({success: true});
+      });
+    } else {
+      return res.sendStatus(404);
+    }
+  });
 });
 
 module.exports = router;

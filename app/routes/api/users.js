@@ -32,6 +32,7 @@ router.post('/', auth.optional, function(req, res){
 });
 
 router.post('/login', function(req, res, next){
+  console.log(req.body)
   if(!req.body.user) return res.status(422).json({error:{credentials: 'Nie podano danych uwierzytelniających.'}});
   const errors = {};
   if(!req.body.user.email){

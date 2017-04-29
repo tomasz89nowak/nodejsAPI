@@ -6,22 +6,26 @@ var router = require('express').Router();
 
 router.get('/', auth.optional, (req, res)=>{
   Article.find(req.query, (err, articles) => {
+    const arts = articles.map(art => {
+      art.content = '';
+      return art;
+    });
     if(err){
       res.send({'error': 'An error occured'});
     }
 
-    res.send(articles);
+    res.send(arts);
   });
 });
 
 router.get('/:id', (req, res)=>{
   const id = req.params.id;
-  Article.findById(id, function(err, note){
+  Article.findById(id, function(err, article){
     if(err){
       res.send({'error': 'An error occured'});
     }
 
-    res.send(note || {error:'There is no item that matches given ID'});
+    res.send(article || {error:'There is no item that matches given ID'});
   });
 });
 

@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 // create a schema
 var articleSchema = new Schema({
   title: {type: String, required: true},
+  description: String,
   content: {type: String, required: true},
   published: Boolean,
   image: Schema.Types.Mixed,

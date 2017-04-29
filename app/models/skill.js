@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 // create a schema
 var skillSchema = new Schema({
-  name: String,
-  progress: Number,
+  name: {type: String, required: true},
+  progress: {type: Number, required: true},
   about: {type: mongoose.Schema.Types.ObjectId, ref: 'About'}
 }, {timestamps: true});
 
