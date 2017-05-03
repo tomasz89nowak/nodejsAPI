@@ -9,7 +9,7 @@ var secret = require('../../config/secret').secret;
 var UserSchema = new Schema({
   username: {type: String, lowercase: true, unique: true, required: [true, "Pole nie może być puste"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
   email: {type: String, lowercase: true, unique: true, required: [true, "Pole nie może być puste"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
-  avatar: String,
+  avatar: Schema.Types.Mixed,
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   hash: String,

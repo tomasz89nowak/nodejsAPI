@@ -1,13 +1,13 @@
-const express        = require('express');
-const MongoClient    = require('mongodb').MongoClient;
-const bodyParser     = require('body-parser');
-const db             = require('./config/db');
-const app            = express();
-const morgan         = require('morgan');
+var express        = require('express');
+var MongoClient    = require('mongodb').MongoClient;
+var bodyParser     = require('body-parser');
+var db             = require('./config/db');
+var app            = express();
+var morgan         = require('morgan');
 var mongoose         = require('mongoose');
 var cors             = require('cors');
 var path             = require('path');
-const port = 8000;
+var port = 8000;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());

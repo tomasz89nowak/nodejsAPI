@@ -51,7 +51,7 @@ router.put('/', upload.single('image'), (req, res) => {
     if(err){
       res.send(err);
     } else {
-      let file = null;
+      var file = null;
       if(req.file){
         file = {
           name: req.file.filename,
@@ -87,9 +87,34 @@ router.get('/skills', auth.optional, (req, res)=>{
   });
 });
 
+router.get('/skills/:id', auth.optional, (req, res)=>{
+  const id = req.params.id;
+  Skill.findById(id, (err, skill) => {
+    if(err){
+      res.status(400).send(err);
+    } else {
+      res.send(skill);
+    }
+  });
+});
+
 
 router.post('/skills', auth.optional, function(req, res){
-  let newSkill = new Skill(req.body);
+  var newSkill = new Skill(req.body);
+  var errors = {};
+  if(!req.body.name.length) {
+    errors.name = 'This field cannot be empty';
+  }
+  if(!req.body.progress) {
+    errors.progress = 'This field cannot be empty';
+  } else
+  if(req.body.progress > 100 || req.body.progress < 0) {
+    errors.progress = 'Value must be greater than 0 and less or equal 100.'
+  }
+  if(Object.keys(errors).length) {
+    res.status(400).send(errors);
+    return;
+  }
 
   About.findOne({}).populate('about').exec(function(err, about){
     newSkill.about = about._id;
@@ -98,7 +123,7 @@ router.post('/skills', auth.optional, function(req, res){
     about.save(function(err){
       if(err){
         console.log(err);
-        res.send({error: 'an error occured.'});
+        res.status(400).send(err);
       } else {
         res.send(newSkill);
       }
@@ -106,6 +131,29 @@ router.post('/skills', auth.optional, function(req, res){
 
   });
 
+});
+
+router.put('/skills/:id', auth.optional, function(req, res){
+  const id = req.params.id;
+  var errors = {};
+  if(!req.body.name.length) {
+    errors.name = 'This field cannot be empty';
+  }
+  if(!req.body.progress) {
+    errors.progress = 'This field cannot be empty';
+  } else
+  if(req.body.progress > 100 || req.body.progress < 0) {
+    errors.progress = 'Value must be greater than 0 and less or equal 100.'
+  }
+  if(Object.keys(errors).length) {
+    res.status(400).send(errors);
+    return;
+  }
+
+  Skill.findById(id, (err, skill) => {
+    skill.update(req.body);
+    res.send(skill);
+  });
 });
 
 router.delete('/skills/:id', (req, res)=>{

@@ -12,7 +12,7 @@ var articleSchema = new Schema({
 
 articleSchema.methods = {
   update: function(data, file){
-    let newFile = {};
+    var newFile = {};
     if(file){
       newFile = {image: file};
     }

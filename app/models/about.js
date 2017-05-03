@@ -8,6 +8,7 @@ var aboutSchema = new Schema({
   text: {type: String},
   published: Boolean,
   image: Schema.Types.Mixed,
+  imagePath: String,
   linkedin: String,
   facebook: String,
   github: String,
@@ -17,9 +18,9 @@ var aboutSchema = new Schema({
 
 aboutSchema.methods = {
   update: function(data, file){
-    let newFile = {};
+    var newFile = {};
     if(file){
-      newFile = {image: file};
+      newFile = {image: file, imagePath: file.path};
     }
     Object.assign(this, data, newFile);
     this.save();

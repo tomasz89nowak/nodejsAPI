@@ -15,7 +15,7 @@ var router = require('express').Router();
   });
 
   router.get('/:id', (req, res)=>{
-    const id = req.params.id;
+    var id = req.params.id;
     Note.findById(id, function(err, note){
       if(err){
         res.send({'error': 'An error occured'});
@@ -26,7 +26,7 @@ var router = require('express').Router();
   });
 
     router.delete('/:id', (req, res)=>{
-      const id = req.params.id;
+      var id = req.params.id;
       Note.findById(id, function(err, note){
         if(err){
           res.send({'error': 'An error occured'});
@@ -37,7 +37,7 @@ var router = require('express').Router();
   });
 
   router.post('/', auth.optional, upload.single('image'), (req, res) => {
-    let file = null;
+    var file = null;
     if(req.file){
       file = {
         name: req.file.filename,
@@ -50,7 +50,7 @@ var router = require('express').Router();
         res.send({error: {file: `File is too large, it has ${(file.size / 1048576).toFixed(2)} MB! Make sure that file is smaller than 1 MB.`}});
       }
     }
-    const newNote = new Note(Object.assign({}, req.body, {image: file}));
+    var newNote = new Note(Object.assign({}, req.body, {image: file}));
 
     newNote.save(function(err, note){
       if(err){
@@ -63,14 +63,14 @@ var router = require('express').Router();
   });
 
   router.put('/:id', upload.single('image'), (req, res) => {
-    const id = req.params.id;
+    var id = req.params.id;
 
     Note.findById(id, function(err, note){
       if(err){
         res.send(err);
       }
 
-      let file = null;
+      var file = null;
       if(req.file){
         file = {
           name: req.file.filename,

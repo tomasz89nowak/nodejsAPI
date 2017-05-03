@@ -10,6 +10,9 @@ router.get('/', auth.optional, (req, res)=>{
       art.content = '';
       return art;
     });
+
+    arts.sort('createdAt');
+
     if(err){
       res.send({'error': 'An error occured'});
     }
@@ -29,19 +32,26 @@ router.get('/:id', (req, res)=>{
   });
 });
 
-router.delete('/:id', (req, res)=>{
+router.delete('/:id', auth.required, (req, res)=>{
   const id = req.params.id;
   Article.findById(id, function(err, article){
     if(err){
       res.send({'error': 'An error occured'});
     }
 
-    res.send('Article ' + id + ' deleted!');
+    if(article){
+      return article.remove().then(function(){
+        return res.send({success: true});
+      });
+    } else {
+      return res.sendStatus(404);
+    }
+
   });
 });
 
 router.post('/', auth.optional, upload.single('image'), (req, res) => {
-  let file = null;
+  var file = null;
   if(req.file){
     file = {
       name: req.file.filename,
@@ -59,22 +69,21 @@ router.post('/', auth.optional, upload.single('image'), (req, res) => {
   newArticle.save(function(err, note){
     if(err){
       console.log(err);
-      res.send(err);
+      res.status(400).send(err);
     }
 
     res.send(note);
   });
 });
 
-router.put('/:id', upload.single('image'), (req, res) => {
+router.put('/:id', auth.required, upload.single('image'), (req, res) => {
   const id = req.params.id;
-
-  Article.findById(id, function(err, note){
+  Article.findById(id, function(err, article){
     if(err){
       res.send(err);
     }
 
-    let file = null;
+    var file = null;
     if(req.file){
       file = {
         name: req.file.filename,
@@ -88,8 +97,8 @@ router.put('/:id', upload.single('image'), (req, res) => {
       }
     }
 
-    note.update(req.body, file);
-    res.send(note);
+    article.update(req.body, file);
+    res.send(article);
   });
 });
 
